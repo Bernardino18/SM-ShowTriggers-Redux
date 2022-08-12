@@ -25,6 +25,7 @@ public Plugin myinfo = {
 #define DISABLE_ALL -1
 
 enum {
+	Func_Brush,
 	Func_NoBuild,
 	Func_NoGrenades,
 	Func_Regenerate,
@@ -43,6 +44,7 @@ enum {
 };
 
 static const char g_NAMES[][] = {
+	"func_brush",
 	"func_nobuild",
 	"func_nogrenades",
 	"func_regenerate",
@@ -227,6 +229,7 @@ void CheckBrushes(bool transmit) {
 
 			SDKHookCB f = INVALID_FUNCTION;
 			switch (i) {
+				case Func_Brush:				f = hookST_funcBrush;
 				case Func_NoBuild:              f = hookST_funcNobuild;
 				case Func_NoGrenades:           f = hookST_funcNogrenades;
 				case Func_Regenerate:           f = hookST_funcRegenerate;
@@ -306,6 +309,14 @@ public Action hookST_funcNogrenades(int entity, int client) {
 
 public Action hookST_funcRegenerate(int entity, int client) {
 	if (g_bTypeEnabled[client][Func_Regenerate]) {
+		return Plugin_Continue;
+	}
+	return Plugin_Handled;
+}
+
+
+public Action hookST_funcBrush(int entity, int client) {
+	if (g_bTypeEnabled[client][Func_Brush]) {
 		return Plugin_Continue;
 	}
 	return Plugin_Handled;
